@@ -89,7 +89,7 @@ void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
     // initialisation that you need..
     juce::ignoreUnused(sampleRate, samplesPerBlock);
 
-    float gain = 0.5;
+    float gain = 0.5f;
 }
 
 void AudioPluginAudioProcessor::releaseResources()
