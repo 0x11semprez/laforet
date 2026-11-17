@@ -88,6 +88,8 @@ void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     juce::ignoreUnused(sampleRate, samplesPerBlock);
+
+    float gain = 0.5;
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -144,10 +146,15 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
-        auto* channelData = buffer.getWritePointer(channel);
-        juce::ignoreUnused(channelData);
-        // ..do something to the data...
+        int maxSamples = buffer.getNumSamples();
+        auto* channelData = buffer.getWritePointer(channel, 0);
+        while (maxSamples > 0) {
+            *channelData *= gain;
+            channelData++;
+            maxSamples--;
+        }
     }
+}
 }
 
 //==============================================================================
