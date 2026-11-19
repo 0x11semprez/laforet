@@ -1,33 +1,36 @@
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include "PluginProcessor.h"
+
 //==============================================================================
-AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p)
-    : AudioProcessorEditor (&p), processorRef (p)
+AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudioProcessor& p)
+    : AudioProcessorEditor(&p), processorRef(p)
 {
-    juce::ignoreUnused (processorRef);
+    juce::ignoreUnused(processorRef);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    addAndMakeVisible(gainSlider);
+    gainSlider.setSliderStyle(juce::Slider::Rotary);
+    gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 64, 32);
+    gainSlider.setRange(-24.0, 24.0, 0.1);
+    gainSlider.setDoubleClickReturnValue(true, 0.0);
+    gainSlider.setColour(juce::Slider::ColourIds::rotarySliderFillColourId, juce::Colours::green);
+    setSize(350, 450);
 }
 
-AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
-{
-}
+AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor() {}
 
 //==============================================================================
-void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
+void AudioPluginAudioProcessorEditor::paint(juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll(juce::Colour(233, 255, 204));
 
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    g.setColour(juce::Colours::grey);
+    g.setFont(14.0f);
 }
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    gainSlider.setBounds(64, 64, 175, 225);
 }
