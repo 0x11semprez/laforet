@@ -155,7 +155,6 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
         }
     }
 }
-}
 
 //==============================================================================
 bool AudioPluginAudioProcessor::hasEditor() const
