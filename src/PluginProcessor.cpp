@@ -2,6 +2,15 @@
 
 #include "PluginEditor.h"
 
+juce::AudioProcessorValueTreeState::ParameterLayout
+AudioPluginAudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+    layout.add(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID{"gain", 1}, "Gain",
+                                                           0.0f, 2.0f, 1.0f));
+    return layout;
+}
+
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     : AudioProcessor(BusesProperties()
@@ -11,7 +20,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
 #endif
                          .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-      )
+                         ),
+      apvts(*this, nullptr, "Parameters", createParameterLayout())
 {
 }
 
@@ -88,8 +98,6 @@ void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     juce::ignoreUnused(sampleRate, samplesPerBlock);
-
-    float gain = 0.5f;
 }
 
 void AudioPluginAudioProcessor::releaseResources()
@@ -124,6 +132,7 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported(const BusesLayout& layout
 void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                                              juce::MidiBuffer& midiMessages)
 {
+    float gain = apvts.getRawParameterValue("gain")->load();
     juce::ignoreUnused(midiMessages);
 
     juce::ScopedNoDenormals noDenormals;
