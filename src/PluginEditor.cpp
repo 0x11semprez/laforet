@@ -1,5 +1,6 @@
 #include "PluginEditor.h"
 
+#include "PluginProcessor.cpp"
 #include "PluginProcessor.h"
 
 //==============================================================================
@@ -10,11 +11,15 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     addAndMakeVisible(gainSlider);
+
+    gainAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+        processorRef.apvts, "gain", gainSlider);
+
     gainSlider.setSliderStyle(juce::Slider::Rotary);
     gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 64, 32);
-    gainSlider.setRange(-24.0, 24.0, 0.1);
     gainSlider.setDoubleClickReturnValue(true, 0.0);
     gainSlider.setColour(juce::Slider::ColourIds::rotarySliderFillColourId, juce::Colours::green);
+
     setSize(350, 450);
 }
 
